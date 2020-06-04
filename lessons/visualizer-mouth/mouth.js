@@ -3,6 +3,7 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+let mouths = [];
 
 let mouthImg = document.getElementById('mouthImg');
 
@@ -22,10 +23,8 @@ var mediaStreamSource = null;
 window.onload = function () {
     // monkeypatch Web Audio
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
-
     // grab an audio context
     audioContext = new AudioContext();
-
     // Attempt to get audio input
     try {
         // monkeypatch getUserMedia
@@ -50,17 +49,11 @@ window.onload = function () {
     } catch (e) {
         alert('getUserMedia threw exception :' + e);
     }
-
 }
 
 function didntGetStream() {
     alert('Stream generation failed.');
 }
-
-window.addEventListener('mousedown',
-    function () {
-
-    })
 
 function gotStream(stream) {
     // Create an AudioNode from the stream.
@@ -68,11 +61,11 @@ function gotStream(stream) {
 
     // Create a new volume meter and connect it.
     meter = createAudioMeter(audioContext);
+
     mediaStreamSource.connect(meter);
     // kick off the visual updating
     audioContext.resume();
     run();
-
 }
 
 
@@ -85,7 +78,8 @@ class Mouth {
         this.height = height;
     }
     draw(audioVal) {
-        if (audioVal < 300) audioVal = 0;
+        if (audioVal < 0.10) audioVal = 0;
+        audioVal *= this.height * 8
         ctx.save();
         ctx.translate(this.x, this.y)
         ctx.drawImage(
@@ -93,17 +87,31 @@ class Mouth {
             -(this.width) / 2,
             -(this.height) / 2,
             this.width,
-            this.height + audioVal);
+            Math.min(this.height + audioVal, this.height * 5));
         ctx.restore();
 
     }
 }
 
-let mouth = new Mouth(canvas.width / 2, canvas.height / 8, 300, 200);
+function createMouths(quantity) {
+    for (let i = 0; i < quantity; i++) {
+        let width = Math.random() * 300;
+        let height = width / 2;
+        mouths.push(new Mouth(canvas.width * Math.random(), canvas.height * Math.random(), width, height))
+        console.log(mouths[i]);
+    }
+}
+
+createMouths(10);
 
 function run() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    mouth.draw(meter.volume * 2000)
+
+    for (let mouth of mouths) {
+        mouth.draw(meter.volume);
+    }
+
     requestAnimationFrame(run);
+
 }
 
