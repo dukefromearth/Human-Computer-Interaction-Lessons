@@ -1,0 +1,76 @@
+<html>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        // Initialize canvas
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Initialize variables
+        let numBalls = 100; // Specifies the number of circles on the canvas
+        let balls = [];
+        let colours = ["red", "black", "yellow"];
+
+        // Create a ball class
+        class Ball {
+            constructor() {
+                this.r = Math.floor(Math.random() * 15 + 10);
+                this.x = Math.floor(Math.random() * canvas.width);
+                this.y = Math.floor(Math.random() * canvas.height)
+                this.fudu = Math.floor(Math.random() * 10 + 5);
+                this.sp = Math.floor(Math.random() * 30 + 5);
+                this.k = 0;
+                this.reY = this.k * this.sp + this.y; // reX is the 
+                this.reX = Math.sin(this.k) * this.fudu + this.x;
+                this.colour = colours[Math.floor(Math.random() * colours.length)];
+            }
+            move() {
+                // Shift each balls position left/right/up
+                this.reY = this.k * this.sp + this.y;
+                this.reX = Math.sin(this.k) * this.fudu + this.x;
+
+                // If the ball has reached the top, return it to the bottom
+                if (this.reY + this.r <= 0) {
+                    this.y = canvas.height;
+                    this.k = 0;
+                }
+                this.k -= 0.1; // Update the position for the frequency shift
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.fillStyle = this.colour;
+                ctx.globalAlpha = 0.5;
+                ctx.arc(this.reX, this.reY, this.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Create balls
+        for (let i = 0; i < numBalls; i++) {
+            balls.push(new Ball());
+            balls[i].draw();
+        }
+
+        // Loop through every ball, update it's position, draw
+        function run() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let b of balls) {
+                b.move();
+                b.draw();
+            }
+            requestAnimationFrame(run); // Call the run function every animation frame
+        }
+
+        // Call the run function
+        run();
+
+    </script>
+
+</body>
+
+</html>

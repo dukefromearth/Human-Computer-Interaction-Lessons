@@ -1,0 +1,134 @@
+<html>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        let blackboxes = [];
+        let yellowboxes = [];
+        let randomboxes = [];
+        let totalboxes = [];
+        let colors = ['#D3491D', '#212121', '#E6930B']
+
+
+        let angle = 0.1;
+
+
+
+        canvas.width = window.outerWidth;
+        canvas.height = window.outerHeight;
+        ctx.fillStyle = '#E6E6E4';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+        document.addEventListener('mousemove', function (event) {
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+            console.log(mouseX, mouseY);
+        });
+
+        ctx.fillStyle = 'black';
+        ctx.fillRect(30, 400, 100, 500);
+
+
+        class Box {
+
+            constructor(x, y, width, height, color) {
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+                this.color = color;
+
+            }
+            draw(mouseX, mouseY) {
+                ctx.save();
+                ctx.translate(this.x, this.y)
+                ctx.rotate(angle);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-(this.width + mouseX / 4) / 2, -(this.height + mouseY / 4) / 2, this.width + mouseX / 4, this.height + mouseY / 4);
+                ctx.restore();
+
+
+            }
+
+        }
+
+        //save a group of black rect
+
+        for (let i = 0; i < 6; i++) {
+            let mybox = new Box(Math.random() * canvas.width / 5, Math.random() * canvas.height / 3, Math.random() * 15 + 15, Math.random() * 20 + 80, '#000000');
+            blackboxes.push(mybox);
+            totalboxes.push(mybox);
+
+        }
+
+
+
+        //save a green rect
+
+        let mybox1 = new Box(Math.random() * 20 + canvas.width / 5, Math.random() * 40, Math.random() * 15 + 60, Math.random() * 60 + 230, '#0E7935');
+
+        totalboxes.push(mybox1);
+
+        //save a big blue rect
+        let mybox2 = new Box(Math.random() * 50 + canvas.width / 4, Math.random() * 40 + 200, Math.random() * 35 + 180, Math.random() * 35 + 180, '#00104E');
+
+        totalboxes.push(mybox2);
+
+        //save a group of yellow rect
+        for (let i = 0; i < 6; i++) {
+            let mybox3 = new Box(Math.random() * canvas.width / 4 + canvas.width / 3, Math.random() * canvas.height / 3, Math.random() * 15 + 15, Math.random() * 50 + 30, '#D3A710');
+            yellowboxes.push(mybox3);
+            totalboxes.push(mybox3);
+
+        }
+
+
+
+        //draw a big black rect
+
+
+
+        //random color box
+        for (let i = 0; i < 6; i++) {
+            let mybox5 = new Box(Math.random() * canvas.width / 4, Math.random() * 100 + canvas.height / 2, Math.random() * 15 + 15, Math.random() * 50 + 30, colors[Math.floor(Math.random() * colors.length)]);
+            randomboxes.push(mybox5);
+            totalboxes.push(mybox5);
+        }
+
+
+        setInterval(
+            function () {
+                // Draw Background
+                ctx.fillStyle = "#E6E6E4";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Update angle
+                angle = angle + 0.01;
+
+                // Draw Boxes
+                for (let i = 0; i < totalboxes.length; i++) {
+                    let box = totalboxes[i];
+
+                    box.draw(mouseX, mouseY);
+                }
+            },
+            1000 / 60
+        );
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

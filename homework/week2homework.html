@@ -1,0 +1,92 @@
+<html>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        /**
+
+            - The code is good, but can be a little bit confusing to read if there are no comments.
+
+            - Try your best to comment code as you go along. If there is any code you do not understand, 
+              please ask or comment and I will help you out!
+
+            - The bubbles look great, I think you're off to a great start. 
+
+        **/
+
+        // Initialize canvas
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Initialize variables
+        let num = 100; // Specifies the number of circles on the canvas
+        let ballX = [];
+        let ballY = [];
+        let ballR = [];
+        let ballF = [];
+        let speed = [];
+        let colours = ["red", "black", "yellow"];
+        let finalCol = [];
+        let reX;
+        let reY;
+        let ballK = [];
+
+        // Create balls in random locations with random speeds and frequencies. 
+        for (let i = 0; i < num; i++) {
+            let radius = Math.floor(Math.random() * 15 + 10);
+            let x = Math.floor(Math.random() * canvas.width);
+            let y = Math.floor(Math.random() * canvas.height);
+            let fudu = Math.floor(Math.random() * 10 + 5);
+            let sp = Math.floor(Math.random() * 30 + 5);
+            let color = colours[Math.floor(Math.random() * colours.length)];
+            ballX.push(x);
+            ballY.push(y);
+            ballR.push(radius);
+            ballF.push(fudu);
+            speed.push(sp);
+            finalCol.push(color);
+        }
+
+        // Clear the canvas
+        // Update the position of each ball
+        function move() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < num; i++) {
+                if (ballK[i] == null) {
+                    ballK[i] = 0;
+                }
+
+                // Shift each balls position left/right/up
+                reX = ballK[i] * speed[i] + ballY[i];
+                reY = Math.sin(ballK[i]) * ballF[i] + ballX[i];
+
+                // If the ball has reached the top, return it to the bottom
+                if (reX + ballR[i] <= 0) {
+                    ballY[i] = canvas.height;
+                    ballK[i] = 0;
+                    reX = ballK[i] * speed[i] + ballY[i];
+                }
+
+                // Draw the ball
+                ctx.beginPath();
+                ctx.fillStyle = finalCol[i];
+                ctx.globalAlpha = 0.5;
+                ctx.arc(reY, reX, ballR[i], 0, Math.PI * 2);
+                ctx.fill();
+                ballK.splice(i, 1, ballK[i]);
+                ballK[i] -= 0.1;
+            }
+        }
+
+        // Call the move() function every 20 milliseconds
+        setInterval(move, 20);
+
+    </script>
+
+</body>
+
+</html>

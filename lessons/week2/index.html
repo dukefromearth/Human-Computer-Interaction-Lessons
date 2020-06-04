@@ -1,0 +1,88 @@
+<html>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        // Access our canvas in javascript
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        // Create Variables
+        let boxes = [];
+        let colors = ["red", "orange", "yellow", "green", "blue"];
+        let numBoxes = 100;
+        let angle = 0.1;
+        let mouseX = 0;
+        let mouseY = 0;
+
+        // Update Variables
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Add event listener
+        document.addEventListener('mousemove', function (event) {
+            mouseX = canvas.width / 2 - event.clientX;
+            mouseY = canvas.height / 2 - event.clientY;
+        });
+
+        // Create box class
+        class Box {
+            constructor(x, y, width, height, color) {
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || Math.random() * canvas.height;
+                this.width = width || Math.random() * 50;
+                this.height = height || Math.random() * 50;
+                this.color = color || colors[Math.floor(Math.random() * colors.length)];
+            }
+            draw(mouseX, mouseY) {
+                ctx.save();
+                ctx.globalAlpha = 0.3;
+                ctx.translate(this.x + mouseX, this.y + mouseY);
+                ctx.rotate(angle);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
+                ctx.restore();
+            }
+            update() {
+                if (this.width < 200 && this.height < 200) {
+                    this.width++;
+                    this.height++;
+                } else {
+                    this.width = Math.random() * 50;
+                    this.height = Math.random() * 50;
+                }
+            }
+        }
+
+        // Create a bunch of boxes 
+        for (let i = 0; i < numBoxes; i++) {
+            let myBox = new Box();
+            boxes.push(myBox);
+        }
+
+        // Loop 60 times per second
+        setInterval(
+            function () {
+                // Draw Background
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Update angle
+                angle = angle + 0.01;
+
+                // Draw Boxes
+                for (let i = 0; i < boxes.length; i++) {
+                    let box = boxes[i];
+                    box.update();
+                    box.draw(mouseX, mouseY);
+                }
+            },
+            1000 / 60
+        );
+
+    </script>
+
+</body>
+
+</html>

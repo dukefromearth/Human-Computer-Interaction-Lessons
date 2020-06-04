@@ -1,0 +1,22 @@
+<html>
+
+<body>
+    <!-- The canvas to paint on -->
+    <canvas id="canvas"></canvas>
+
+    <!-- The code to update the canvas -->
+    <script>
+        let canvas = document.getElementById('canvas'); // canvas
+        let ctx = canvas.getContext('2d');              // context
+        console.log(ctx);
+
+        // When we move the mouse, draw a square
+        document.addEventListener('mousemove', function (e) {
+            console.log(e);
+            ctx.fillRect(e.clientX, e.clientY, 20, 20);
+        });
+
+    </script>
+</body>
+
+</html>
