@@ -1,37 +1,166 @@
 <html>
 
+<head>
+    <style>
+        /* This is so our images aren't drawn to the web where we don't want them */
+        img {
+            display: none;
+        }
+    </style>
+</head>
+
 <body>
+
     <canvas id="canvas"></canvas>
-    <img id="miaImage" src="daman.png"></img>
+
     <script>
+
+        // Declare variables
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
-        let mia = {
-            img: document.getElementById('miaImage'),
-            width: 460,
-            height: 951,
-            aspect: 460 / 951
-        }
-        let imageData;
-        let imageDataCompressed = [];
-
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        let x = canvas.width / 2 - 500 * mia.aspect / 2;
-        let y = 0
-        ctx.drawImage(mia.img, x, y, 500 * mia.aspect, 500);
-        imageData = ctx.getImageData(canvas.width / 2 - 500 * mia.aspect / 2, 0, 500 * mia.aspect, 500);
-        for (let i = 0; i < imageData.data.length - 1; i++) {
-            imageData.data[i] = 100;
-            if (imageData.data[i] > 1) {
-                imageData.data[i] = 900;
-                // imageDataCompressed.push({ index: i, val: imageData.data[i] });
-                // ctx.fillStyle = imageData.data[i];
-                // ctx.fillRect(i % canvas.width, Math.floor(i / canvas.width), 5, 5);
-                // console.log(i, i % canvas.width, Math.floor(i / canvas.width));
+        let mia = new Image();
+        let music = new Image();
+        let imgHeight = canvas.height / 2;
+        let lights = [];
+        let musicBursts = [];
+        let gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        gradient.addColorStop(0, "#3c1361");
+        gradient.addColorStop(1, '#7c5295');
+
+        // Set image information
+        mia.src = './daman.png';
+        music.src = './music.png';
+        mia.w = 460;
+        mia.h = 951;
+        mia.aspect = 460 / 951;
+
+        // Creates a trangle from a specific point on the canvas thats extends down to the bottom.
+        class Beam {
+            constructor(x, y, color, width, alpha) {
+                this.alpha = alpha;                             // Alpha is how transparent the object is
+                this.color = color;
+                this.width = Math.min(canvas.width / 2, width);
+                this.speed = Math.random() * 10 + 2;
+
+                this.points = {                                 // The three points of a triangle
+                    x: x,
+                    y: y,
+                    x2: 1,
+                    y2: canvas.height,
+                    x3: this.width,
+                    y3: canvas.height
+                }
+            }
+            // Updates the location of the bottom two points of the triangle (x2, x3)
+            // If they have reached the edge of the canvas, we reverse direction using the opposite speed
+            update() {
+                if (this.points.x2 <= 0) this.speed = -this.speed;
+                else if (this.points.x3 >= canvas.width) this.speed = -this.speed;
+                this.points.x2 += this.speed;
+                this.points.x3 += this.speed;
+            }
+            // Uses lines to create a path between each points, after we draw our lines, we close the path
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.moveTo(this.points.x, this.points.y);
+                ctx.lineTo(this.points.x2, this.points.y2);
+                ctx.lineTo(this.points.x3, this.points.y3);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
             }
         }
 
+        // Creates a radial burst of some image file
+        class Burst {
+            constructor(x, y, img, quantity) {
+                this.x = x;
+                this.y = y;
+                this.r = 10;
+                this.rotation = 0;
+                this.img = img;
+                this.quantity = quantity;
+            }
+            // Increase the radius of the circle
+            update() {
+                this.r += 10;
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation += 0.01)
+                for (let i = 0; i < this.quantity; i++) {
+                    let angle = i * (2 * Math.PI) / this.quantity;  // Cuts a circle into slices (like a pizza);
+                    let x = Math.cos(angle) * this.r;               // The x coordinate correlates with the cosin of the angle
+                    let y = Math.sin(angle) * this.r;               // The y coordinate correlates with the sin of the angle
+                    ctx.drawImage(this.img, x, y, 30, 30);
+                }
+                ctx.restore();
+            }
+        }
+
+        // Clears out the canvas and draws a new background
+        function drawBackground() {
+            ctx.save();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = gradient;
+            ctx.globalAlpha = 0.8;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+        }
+
+        // Draws the image of our girl
+        function drawMia() {
+            ctx.drawImage(mia, canvas.width / 2 - imgHeight * mia.aspect / 2, 0, imgHeight * mia.aspect, imgHeight);
+        }
+
+        // Loops through each light beam and draws them
+        function drawLights() {
+            for (let light of lights) {
+                light.draw();
+                light.update();
+            }
+        }
+
+        // Loops through each music burst, if it is outside of the canvas we delete it.
+        function drawMusicBurst() {
+            for (let i = 0; i < musicBursts.length; i++) {
+                let burst = musicBursts[i];
+                burst.draw();
+                burst.update();
+                if (burst.r >= Math.max(canvas.width, canvas.height)) {
+                    musicBursts.splice(i, 1);
+                }
+            }
+
+        }
+
+        // Create each light beam
+        lights.push(new Beam(canvas.width / 2, canvas.height / 2 - imgHeight * .05, 'yellow', 500, 0.4));
+        lights.push(new Beam(canvas.width / 2 - imgHeight * 0.1, canvas.height / 2 - imgHeight * .1, 'red', 500, 0.4));
+        lights.push(new Beam(canvas.width / 2 + imgHeight * 0.11, canvas.height / 2 - imgHeight * .12, 'skyblue', 500, 0.4));
+
+        // Main animation
+        function run() {
+            drawBackground();
+            drawMusicBurst()
+            drawMia();
+            drawLights();
+            requestAnimationFrame(run);
+        }
+
+        // Creates a new music burst at a specified interval
+        setInterval(function () {
+            musicBursts.push(new Burst(canvas.width / 2, canvas.height / 2 - imgHeight / 1.75, music, 10));
+        }, 1000 / 1.5);
+
+        // Calls our main animation
+        run();
 
     </script>
 </body>
