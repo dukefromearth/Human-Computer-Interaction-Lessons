@@ -1,0 +1,17 @@
+<html>
+
+<body>
+    <h1 id="text">My Text</h1>
+    <script>
+
+        document.addEventListener('keydown', updateText);
+
+        function updateText(event) {
+            let text = document.getElementById('text');
+            text.textContent = event.key;
+        }
+
+    </script>
+</body>
+
+</html>

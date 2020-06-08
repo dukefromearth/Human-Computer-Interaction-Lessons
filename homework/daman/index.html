@@ -1,0 +1,39 @@
+<html>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <img id="miaImage" src="daman.png"></img>
+    <script>
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        let mia = {
+            img: document.getElementById('miaImage'),
+            width: 460,
+            height: 951,
+            aspect: 460 / 951
+        }
+        let imageData;
+        let imageDataCompressed = [];
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let x = canvas.width / 2 - 500 * mia.aspect / 2;
+        let y = 0
+        ctx.drawImage(mia.img, x, y, 500 * mia.aspect, 500);
+        imageData = ctx.getImageData(canvas.width / 2 - 500 * mia.aspect / 2, 0, 500 * mia.aspect, 500);
+        for (let i = 0; i < imageData.data.length - 1; i++) {
+            imageData.data[i] = 100;
+            if (imageData.data[i] > 1) {
+                imageData.data[i] = 900;
+                // imageDataCompressed.push({ index: i, val: imageData.data[i] });
+                // ctx.fillStyle = imageData.data[i];
+                // ctx.fillRect(i % canvas.width, Math.floor(i / canvas.width), 5, 5);
+                // console.log(i, i % canvas.width, Math.floor(i / canvas.width));
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>

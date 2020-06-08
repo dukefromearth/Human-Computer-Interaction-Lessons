@@ -1,0 +1,30 @@
+<html>
+
+<head>
+    <style>
+        .myClass {
+            background-image: url("mouth.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            color: blue;
+            font-size: 80px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- button is a button tag that runs the function "changeText()" when it is clicked -->
+    <button id="button" onclick="changeText()" class="myClass">Click Me</button>
+
+    <!-- Javascript function to change the color of text between red and blue -->
+    <script>
+        function changeText() {
+            let button = document.getElementById("button");
+            if (button.style.color === "red") button.style.color = "blue";
+            else button.style.color = "red";
+        }
+    </script>
+</body>
+
+</html>
