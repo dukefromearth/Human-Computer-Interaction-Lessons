@@ -1,0 +1,38 @@
+<html>
+
+<head>
+    <style>
+        img {
+            display: none;
+        }
+
+        button {
+            position: absolute;
+            color: white;
+            background-color: green;
+            font-size: 24px;
+            font: 'fantasy';
+            width: 120;
+            height: 80;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+            -ms-transform: translateX(-50%);
+            transform: translateX(-50%);
+        }
+
+        canvas {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <img id="bird" src="assets/flappyBird.png">
+    <canvas id="canvas"></canvas>
+    <button id="playButton">PLAY</button>
+    <script src="flappyBird.js"></script>
+</body>
+
+</html>

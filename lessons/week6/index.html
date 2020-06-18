@@ -1,0 +1,33 @@
+<script>
+    class Node {
+        constructor() {
+            this.val = null;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    function createTree(arr, root) {
+        if (arr.length < 1) return;
+        let mid = Math.floor(arr.length / 2);
+        let left = arr.slice(0, mid);
+        let right = arr.slice(mid + 1, arr.length);
+        if (left.length > 0) root.left = createTree(left, new Node());
+        root.val = arr[mid];
+        if (right.length > 0) root.right = createTree(right, new Node());
+    }
+
+    function createTree2(arr, root) {
+        if (arr.length < 1) return;
+        let mid = Math.floor(arr.length / 2);
+        root.val = arr[mid];
+        console.log(root.val);
+        root.left = createTree2(arr.slice(0, mid), new Node());
+        root.right = createTree2(arr.slice(mid + 1, arr.length), new Node());
+    }
+
+    let arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+    let root = new Node();
+    createTree2(arr, root);
+
+</script>

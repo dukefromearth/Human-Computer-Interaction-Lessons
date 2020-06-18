@@ -11,15 +11,18 @@
 
 <body>
 
-    <canvas id="canvas"></canvas>
+    <canvas id="canvas" style="background:#eeeeee; 
+               margin:0; padding:0; 
+               position:absolute; 
+               top:0; left:0">>></canvas>
 
     <script>
 
         // Declare variables
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = document.documentElement.clientWidth || document.body.clientWidth;
+        canvas.height = document.body.clientHeight;
         let mia = new Image();
         let music = new Image();
         let imgHeight = canvas.height / 2;

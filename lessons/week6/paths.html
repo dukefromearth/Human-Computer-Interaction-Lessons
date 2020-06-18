@@ -1,0 +1,65 @@
+<html>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Circle {
+            constructor(x, y, r, amplitude, speed) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.delta = 0;
+                this.speed = speed;
+                this.amplitude = amplitude;
+            }
+            moveInCircle() {
+                this.delta += this.speed;
+                this.x += Math.cos(this.delta) * this.amplitude;
+                this.y += Math.sin(this.delta) * this.amplitude;
+            }
+            moveInWave() {
+                this.delta += this.speed;
+                this.x++;
+                this.y += Math.sin(this.delta) * this.amplitude;
+            }
+            moveToTarget(target) {
+                if (this.x === target.x && this.y === target.y) return;
+                this.angle = Math.atan2(target.y - this.y, target.x - this.x);
+                this.x += Math.cos(this.angle) * this.speed;
+                this.y += Math.sin(this.angle) * this.speed;
+            }
+            draw(ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+        }
+
+
+        let circle = new Circle(canvas.width / 2, canvas.height / 2, 50, 6, 0.15);
+        let circle2 = new Circle(0, canvas.height / 2, 50, 6, 0.1);
+        let circle3 = new Circle(0, canvas.height / 2, 50, 6, 5);
+
+        let target = { x: canvas.width - 50, y: 50 };
+
+        let render = () => {
+            requestAnimationFrame(render);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            circle.moveInCircle();
+            circle.draw(ctx);
+            circle2.moveInWave();
+            circle2.draw(ctx);
+            circle3.moveToTarget(target);
+            circle3.draw(ctx);
+        }
+        render();
+
+    </script>
+</body>
+
+</html>

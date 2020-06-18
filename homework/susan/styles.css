@@ -1,0 +1,25 @@
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+html,
+body {
+  display: block;
+}
+body {
+  overflow: hidden;
+  position: relative;
+  background-color: black;
+  background-image: url("./assets/background.jpg");
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 100vw;
+  font-family: "Denk One", Arial, sans-serif;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 1.2em;
+  color: #f0f0f0;
+}
