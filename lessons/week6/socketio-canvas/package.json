@@ -1,0 +1,17 @@
+{
+  "name": "socket-io-basics",
+  "version": "1.0.0",
+  "description": "A simple web application that demostrates the use of web sockets and node.js.",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node --experimental-modules ./private/server.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stephen Duke",
+  "license": "ISC"
+}

@@ -262,6 +262,8 @@ const setupScene = () => {
         mouse.y = deviceInfo.mouseCenterY(e);
     });
 
+    
+
     let angle = 0;
 
     // animation loop 
