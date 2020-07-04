@@ -8,7 +8,7 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 let birdImg = document.getElementById('bird');
-let backgroundImages = ["bg0.png", "bg1.png", "bg2.png"];
+let backgroundImages = ["assets/bg0.png", "assets/bg1.png", "assets/bg2.png"];
 let mouseDown = false;
 let score = 0;
 let player = {};
@@ -89,7 +89,7 @@ class Background {
     init(imageNames) {
         for (let i of imageNames) {
             let myImage = new Image(canvas.width, canvas.height);
-            myImage.src = "assets/" + i;
+            myImage.src = i;
             document.body.appendChild(myImage);
             this.images.push({ img: myImage, pos: 0 });
         }

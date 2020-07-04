@@ -34,9 +34,4 @@ io.on('connection', function (socket) {
         data = "A new player has joined with id: " + socket.id;
         io.emit(message, data);
     });
-
-    socket.on('click', function (data) {
-        io.emit('click', data);
-    })
-
 });
