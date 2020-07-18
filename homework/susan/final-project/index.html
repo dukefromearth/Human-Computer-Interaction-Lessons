@@ -1,0 +1,78 @@
+<html>
+
+<head>
+    <script src="jquery.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+    <h1 id="h" class="h">Astronaut Game</h1>
+    <button id="startbutton" class="startbutton">Start</button>
+
+    <script type="module" src="js.js">
+
+
+    </script>
+</body>
+<style>
+    .startbutton {
+        position: absolute;
+        margin-left: 50%;
+        margin-top: 40%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+
+        padding: 10px 40px;
+        font-size: 32px;
+        font-style: oblique;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        text-align: center;
+        color: aliceblue;
+        border: 2px solid rgba(147, 181, 255, 0.836);
+        background-color: rgba(110, 156, 255, 0.384);
+
+
+        border-radius: 10px;
+
+
+
+
+
+    }
+
+    .startbutton:hover {
+        background-color: rgb(95, 137, 228);
+    }
+
+    .startbutton:active {
+        background-color: rgb(95, 137, 228);
+    }
+
+    canvas {
+        position: absolute;
+    }
+
+    .h {
+        position: absolute;
+
+
+        font-size: 100px;
+        font-style: oblique;
+        text-align: center;
+        color: seashell;
+        margin-left: 50%;
+        margin-top: 20%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+
+
+    }
+</style>
+
+</html>
