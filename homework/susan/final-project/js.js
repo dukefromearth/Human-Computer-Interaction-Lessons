@@ -12,23 +12,24 @@ const socket = io();
 socket.emit('new player');
 let as, sp;
 
+
 var backgroundimg = new Image();
-backgroundimg.src = "bg.jpg";
+backgroundimg.src = "/assets/bg.jpg";
 
 var astr = new Image();
-astr.src = "as.png";
+astr.src = "/assets/as.png";
 
 var spacecraft1 = new Image();
-spacecraft1.src = "sc.png";
+spacecraft1.src = "/assets/sc.png";
 
 var playre = new Image();
-playre.src = "as1.png";
+playre.src = "/assets/as1.png";
 
 var bomb = new Image();
-bomb.src = "bomb.png";
+bomb.src = "/assets/bomb.png";
 
 var backgroundimg2 = new Image();
-backgroundimg2.src = "bg2.jpg";
+backgroundimg2.src = "/assets/bg2.jpg";
 
 let running = false;
 let boms = [];
@@ -53,27 +54,23 @@ function detectcollision(rect1, rect2) {
         rect1.y < rect2.y + rect2.height &&
         rect1.y + rect1.height > rect2.y) {
         return true;
-
     }
     else { return false; }
 }
 
-function DetectCollisions() {
+function DetectCollisions(player) {
     for (let i = 0; i < boms.length; i++) {
-        if (detectcollision(boms[i], player1)) {
-            cancelAnimationFrame(run);
-            running = false;
-            setup();
-            return;
+        if (detectcollision(boms[i], player)) {
+            boms[i].y = Math.random() * -canvas.height;
+            return true;
         }
-
     }
+    return false;
 }
 
 function setup() {
     as = new Astronaut(astr);
     sp = new SpaceCraft(spacecraft1);
-
     $("#startbutton").show();
     $("#h").show();
     render();
@@ -92,7 +89,6 @@ function updatePlayers(state) {
     players = {};
     for (let id in state) {
         let p = state[id];
-        console.log(state);
         if (players[p.id]) {
             players[p.id].x = p.x;
             players[p.id].y = p.y;
@@ -107,6 +103,12 @@ function updatePlayers(state) {
 function run() {
     if (running && player1) {
         requestAnimationFrame(run);
+        if (player1.xp <= 0) {
+            player1.xp = player1.width;
+            cancelAnimationFrame(run);
+            running = false;
+            setup();
+        }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(backgroundimg2, 0, 0, 1604, 896, 0, 0, canvas.width, canvas.height);
         for (let i = 0; i < boms.length; i++) {
@@ -121,16 +123,20 @@ function run() {
         }
 
         stick.update(mouse.x, mouse.y);
-        player1.update();
+        // player1.update();
+        // player1.draw(ctx);
         for (let id in players) {
             let p = players[id];
+            p.update();
             p.draw(ctx);
         }
 
         // player1.draw(ctx);
         // player1.update();
 
-        DetectCollisions();
+        if (!player1.spinning) {
+            if (DetectCollisions(player1)) player1.xp -= 10;
+        }
     }
 }
 
@@ -149,6 +155,7 @@ document.addEventListener('mousedown', function (e) {
     mouse.mouseDown = true;
     stick.originX = e.clientX;
     stick.originY = e.clientY;
+
 });
 
 document.addEventListener('mouseup', function (e) {
@@ -182,6 +189,16 @@ socket.on('new player', function (id) {
         if (data === "-") {
             player1.y--;
         }
+    });
+
+    socket.on("scream", function () {
+        player1.startSpin();
+    });
+
+    document.addEventListener('keypress', function (e) {
+        if (e.key === ' ') {
+            player1.startSpin();
+        }
     })
 });
 
@@ -194,3 +211,8 @@ setup();
 setInterval(function () {
     if (player1) socket.emit('player-state', player1);
 }, 1000 / 30);
+
+setInterval(function () {
+    let bom = new Bomb(bomb, Math.random() * 2 + 2);
+    boms.push(bom);
+}, 300);

@@ -50,6 +50,10 @@ io.on('connection', function (socket) {
 // port.on('readable', function () {
 //     let data = port.read();
 //     data = data.toString();
+//     console.log(data === "scream");
+//     if (data === "scream") {
+//         io.emit("scream");
+//     }
 //     for (let i = 0; i < data.length; i++) {
 //         if (data[i] === "x") {
 //             movex = data[i + 1];
